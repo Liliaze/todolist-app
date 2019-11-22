@@ -44,6 +44,15 @@ export async function login(username, password) {
     navigateToTodoScreen();
 }
 
+export async function signup(username, password) {
+    const jsonResult = await fetchJson(AccountQueries.create(username, password));
+    const authToken = jsonResult.auth_token;
+
+    LocalStorage.set('auth_token', authToken);
+    await loadAllRemoteTasks();
+    navigateToTodoScreen();
+}
+
 export async function loadAllRemoteTasks() {
     const authToken = getLocalAuthToken();
 
