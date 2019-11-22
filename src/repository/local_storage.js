@@ -1,9 +1,8 @@
-
 const LocalStorage = {
     get: function (key) {
         const jsonValue = window.localStorage.getItem(key);
 
-        return JSON.parse(jsonValue).value;
+        return jsonValue ? JSON.parse(jsonValue).value : null;
     },
     set: function (key, value) {
         const jsonValue = JSON.stringify({ value });
