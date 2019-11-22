@@ -1,9 +1,9 @@
-import { getLocalAuthToken } from './repository/action.js';
+import { getLocalAuthToken, navigateToLoginScreen } from './controller/action.js';
 
 window.addEventListener('load', main);
 
 function main() {
-    console.log('hello from main!', data);
+    console.log('hello from main!');
 
     const authToken = getLocalAuthToken();
 
@@ -11,6 +11,6 @@ function main() {
         console.log(">>> authToken", authToken);
         // TODO: load tasks: if auth error -> render login screen, else -> render task screen
     } else {
-        // TODO: render login screen
+        navigateToLoginScreen();
     }
 }
