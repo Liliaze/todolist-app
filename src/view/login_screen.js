@@ -14,32 +14,46 @@ export function createLoginScreen() {
 }
 
 function createLoginForm() {
+    const usernameLabel = createElement('label', { id: 'username_label', className: 'label' }, 'Username:');
+    const usernameInput = createElement('input', { type: 'text', required: true, placeholder: 'medialis' });
+    const passwordInput = createElement('input', { type: 'password', required: true });
+    const passwordLabel = createElement('label', { id: 'password_label', className: 'label' }, 'Password:');
+
+    const checkValidInputValues = () => {
+        let isValid = true;
+        if (usernameInput.value.length < 3) {
+            isValid = false;
+            usernameLabel.className = 'label-error';
+        } else {
+            usernameLabel.className = 'label';
+        }
+        if (passwordInput.value.length < 3) {
+            isValid = false;
+            passwordLabel.className = 'label-error';
+        } else {
+            passwordLabel.className = 'label';
+        }
+        return isValid;
+    };
+
     const form = createElement('div', null, [
-        createElement('div', null, [
-            createElement('label', { for: 'username' }, 'Username:'),
-            createElement('input', { type: 'text', name: 'username', id: 'username_input', required: true, placeholder: 'medialis' }),
-        ]),
-        createElement('div', null, [
-            createElement('label', { for: 'password' }, 'Password:'),
-            createElement('input', { type: 'password', name: 'password', id: 'password_input', required: true }),
-        ]),
-        createElement('button', { onclick: handleNewAccountClick }, 'New Account'),
-        createElement('button', { onclick: handleLoginClick }, 'Login'),
+        createElement('div', null, [usernameLabel, usernameInput]),
+        createElement('div', null, [passwordLabel, passwordInput]),
+        createElement('button', {
+            onclick: () => {
+                if (checkValidInputValues()) {
+                    login(usernameInput.value, passwordInput.value);
+                }
+            }
+        }, 'New Account'),
+        createElement('button', {
+            onclick: () => () => {
+                if (checkValidInputValues()) {
+                    signup(usernameInput.value, passwordInput.value);
+                }
+            }
+        }, 'Login'),
     ]);
 
     return form;
-}
-
-function handleLoginClick(event) {
-    const username = document.getElementById('username_input');
-    const password = document.getElementById('password_input');
-
-    login(username, password);
-}
-
-function handleNewAccountClick(event) {
-    const username = document.getElementById('username_input');
-    const password = document.getElementById('password_input');
-
-    signup(username, password);
 }
