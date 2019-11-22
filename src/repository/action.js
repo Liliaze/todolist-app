@@ -1,7 +1,7 @@
 import * as LocalStorage from './local_storage.js';
 import { AccountQueries, fetchJson } from './api_client.js';
 
-export function loadLocalAuthToken() {
+export function getLocalAuthToken() {
     return LocalStorage.get('auth_token');
 }
 
