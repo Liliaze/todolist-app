@@ -1,5 +1,5 @@
 import { createElement } from '../model/element.js';
-import { login } from '../controller/action.js';
+import { login, signup } from '../controller/action.js';
 
 export function createLoginScreen() {
     const screen = createElement('div',
@@ -23,16 +23,23 @@ function createLoginForm() {
             createElement('label', { for: 'password' }, 'Password:'),
             createElement('input', { type: 'password', name: 'password', id: 'password_input', required: true }),
         ]),
-        createElement('button', { onclick: () => alert('TODO') }, 'New Account'),
-        createElement('button', { onclick: handlerLoginClick }, 'Login'),
+        createElement('button', { onclick: handleNewAccountClick }, 'New Account'),
+        createElement('button', { onclick: handleLoginClick }, 'Login'),
     ]);
 
     return form;
 }
 
-function handlerLoginClick(event) {
+function handleLoginClick(event) {
     const username = document.getElementById('username_input');
     const password = document.getElementById('password_input');
 
     login(username, password);
+}
+
+function handleNewAccountClick(event) {
+    const username = document.getElementById('username_input');
+    const password = document.getElementById('password_input');
+
+    signup(username, password);
 }
