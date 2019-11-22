@@ -24,80 +24,80 @@ export const TaskListQueries = {
         path: 'taskList',
         method: 'GET',
         headers: {
-            authToken
+            auth_token: authToken
         },
     }),
-    getOne: (idTaskList, authToken) => ({
-        path: 'taskList/' + idTaskList,
+    getOne: (authToken, taskListId) => ({
+        path: 'taskList/' + taskListId,
         method: 'GET',
         headers: {
-            authToken
+            auth_token: authToken
         },
     }),
     create: (authToken, title) => ({
         path: 'taskList',
         method: 'POST',
         headers: {
-            authToken
+            auth_token: authToken
         },
         body: {
             title
         }
     }),
-    update: (idTaskList, authToken, title) => ({
-        path: 'taskList/' + idTaskList,
+    update: (authToken, taskListId, title) => ({
+        path: 'taskList/' + taskListId,
         method: 'POST',
         headers: {
-            authToken
+            auth_token: authToken
         },
         body: {
             title
         }
     }),
-    delete: (idTaskList, authToken) => ({
-        path: 'taskList/' + idTaskList,
+    delete: (authToken, taskListId) => ({
+        path: 'taskList/' + taskListId,
         method: 'DELETE',
         headers: {
-            authToken
+            auth_token: authToken
         }
     })
 };
 
 export const TaskQueries = {
-    getAll: (idTaskList, authToken) => ({
-        path: 'taskList/' + idTaskList + '/tasks',
+    getAll: (authToken, taskListId) => ({
+        path: 'taskList/' + taskListId + '/tasks',
         method: 'GET',
         headers: {
-            authToken
+            auth_token: authToken
         },
     }),
-    create: (idTaskList, authToken, content) => ({
-        path: 'taskList/' + idTaskList + '/task',
+    create: (authToken, taskListId, content) => ({
+        path: 'taskList/' + taskListId + '/task',
         method: 'POST',
         headers: {
-            authToken
+            auth_token: authToken
         },
         body: {
             content
         }
     }),
-    update: (idTask, authToken, content, status, idTaskList) => ({
-        path: 'task/' + idTask,
+    update: (authToken, taskId, content, status, taskListId) => ({
+        path: 'task/' + taskId,
         method: 'POST',
         headers: {
-            authToken
+            auth_token: authToken
         },
         body: {
             content,
             status,
-            idTaskList
+            id_tasklist: taskListId
         }
     }),
-    delete: (idTask, authToken) => ({
-        path: 'task/' + idTask,
+    delete: (authToken, taskId) => ({
+        path: 'task/' + taskId,
         method: 'DELETE',
         headers: {
-            authToken
+            auth_token: authToken
         }
     }),
 };
