@@ -1,7 +1,8 @@
 # commands
 
+* install node
+
 ```
-install node
 git init
 npm init
 npm i -D lite-server
