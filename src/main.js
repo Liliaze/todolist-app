@@ -1,4 +1,4 @@
-import { getLocalAuthToken, navigateToLoginScreen, loadAllRemoteTasks } from './controller/action.js';
+import { getLocalAuthToken, navigateToLoginScreen, navigateToTodoScreen, loadAllRemoteTasks } from './controller/action.js';
 
 window.addEventListener('load', main);
 
@@ -9,7 +9,7 @@ async function main() {
         console.log(">>> authToken", authToken);
         try {
             await loadAllRemoteTasks();
-            // TODO: render task screen
+            navigateToTodoScreen();
         } catch (error) {
             if (!error.response || error.response.status !== 401) {
                 console.error(error);
