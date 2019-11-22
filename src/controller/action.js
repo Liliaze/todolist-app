@@ -1,7 +1,10 @@
 import Config from '../config.js';
 import LocalStorage from '../repository/local_storage.js';
-import { AccountQueries, fetchJson } from '../repository/api_client.js';
+import { fetcher } from '../repository/fetcher.js';
+import { AccountQueries, TaskListQueries, TaskQueries } from '../repository/api_client.js';
 import { createLoginScreen } from '../view/login_screen.js';
+
+const { fetchJson } = fetcher(Config.ApiBaseUrl);
 
 const memory = {
     rootHtmlElement: document.getElementById(Config.rootHtmlElementId)
@@ -12,7 +15,7 @@ function initLoginScreen() {
 }
 
 function navigateToScreen(screen) {
-    while(memory.rootHtmlElement.firstChild) {
+    while (memory.rootHtmlElement.firstChild) {
         memory.rootHtmlElement.removeChild(memory.rootHtmlElement.firstChild);
     }
     memory.rootHtmlElement.appendChild(screen);
@@ -36,4 +39,21 @@ export async function login(username, password) {
     LocalStorage.set('auth_token', authToken);
 
     return authToken;
+}
+
+export async function loadAllRemoteTasks() {
+    const authToken = getLocalAuthToken();
+
+    const { allTaskLists: value } = await fetchJson(TaskListQueries.getAll(authToken));
+    console('>>> allTaskLists', allTaskResult);
+    const allTaskResult = await Promise.all(allTaskLists.map(taskList => fetchJson(TaskQueries.getAll(authToken, taskList.taskList_id))));
+    console('>>> allTaskResult', allTaskResult);
+
+    // LocalStorage.set('taskCollection', allTaskResult); // TODO: sanitize result before persist
+}
+
+export function getLocalTasks() {
+    const taskCollection = LocalStorage.get('taskCollection');
+    console.log('>>> taskCollection', taskCollection);
+    // TODO: map result with model createTask
 }
