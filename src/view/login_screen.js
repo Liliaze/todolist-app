@@ -30,7 +30,7 @@ function createLoginForm() {
             }
         }, 'New Account'),
         createElement('button', {
-            onclick: () => () => {
+            onclick: () => {
                 if (checkValidInputValues()) {
                     login(usernameInput.value, passwordInput.value);
                 }
