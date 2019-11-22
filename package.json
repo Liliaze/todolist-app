@@ -1,0 +1,23 @@
+{
+  "name": "todolist-app",
+  "version": "1.0.0",
+  "description": "small web app to introduce the remote RESTFUL API",
+  "main": "index.html",
+  "scripts": {
+    "dev": "lite-server --baseDir=\"src\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liliaze/todolist-app.git"
+  },
+  "author": "Diana Boudy",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/liliaze/todolist-app/issues"
+  },
+  "homepage": "https://github.com/liliaze/todolist-app#readme",
+  "devDependencies": {
+    "lite-server": "^2.5.4"
+  }
+}
