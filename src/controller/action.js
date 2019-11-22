@@ -56,12 +56,12 @@ export async function signup(username, password) {
 export async function loadAllRemoteTasks() {
     const authToken = getLocalAuthToken();
 
-    const { allTaskLists: value } = await fetchJson(TaskListQueries.getAll(authToken));
-    console('>>> allTaskLists', allTaskResult);
+    const { value: allTaskLists } = await fetchJson(TaskListQueries.getAll(authToken));
+    console.log('>>> allTaskLists', allTaskLists);
     const allTaskResult = await Promise.all(allTaskLists.map(
         taskList => fetchJson(TaskQueries.getAll(authToken, taskList.taskList_id))
     ));
-    console('>>> allTaskResult', allTaskResult);
+    console.log('>>> allTaskResult', allTaskResult);
 
     // LocalStorage.set('taskCollection', allTaskResult); // TODO: sanitize result before persist
 }
