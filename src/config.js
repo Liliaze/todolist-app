@@ -5,6 +5,7 @@ export const Environment = {
 
 
 const Config = {
+    rootHtmlElementId: 'app_root',
     env: Environment.Dev,
     get ApiBaseUrl() {
         return {

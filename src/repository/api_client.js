@@ -1,4 +1,4 @@
-import * as Config from '../config.js';
+import Config from '../config.js';
 
 export const AccountQueries = {
     create: (username, password) => ({
