@@ -19,21 +19,88 @@ export const AccountQueries = {
     })
 };
 
+export const TaskListQueries = {
+    getAll: (authToken) => ({
+        path: 'taskList',
+        method: 'GET',
+        headers: {
+            authToken
+        },
+    }),
+    getOne: (idTaskList, authToken) => ({
+        path: 'taskList/' + idTaskList,
+        method: 'GET',
+        headers: {
+            authToken
+        },
+    }),
+    create: (authToken, title) => ({
+        path: 'taskList',
+        method: 'POST',
+        headers: {
+            authToken
+        },
+        body: {
+            title
+        }
+    }),
+    update: (idTaskList, authToken, title) => ({
+        path: 'taskList/' + idTaskList,
+        method: 'POST',
+        headers: {
+            authToken
+        },
+        body: {
+            title
+        }
+    }),
+    delete: (idTaskList, authToken) => ({
+        path: 'taskList/' + idTaskList,
+        method: 'DELETE',
+        headers: {
+            authToken
+        }
+    })
+};
 
-/* TODO: routes:
-* 'POST' /api/user
-* 'GET' /api/authToken
-
-* 'GET' /api/taskList
-* 'GET' /api/taskList/{idList}
-* 'GET' /api/taskList/{taskListId}/tasks
-* 'POST' /api/taskList
-* 'POST' /api/taskList/{taskListId}
-* 'POST' /api/taskList/{taskListId}/task
-* 'POST' /api/task/{taskId}
-* 'DELETE' /api/taskList/{taskListId}
-* 'DELETE' /api/task/{taskId}
-*/
+export const TaskQueries = {
+    getAll: (idTaskList, authToken) => ({
+        path: 'taskList/' + idTaskList + '/tasks',
+        method: 'GET',
+        headers: {
+            authToken
+        },
+    }),
+    create: (idTaskList, authToken, content) => ({
+        path: 'taskList/' + idTaskList + '/task',
+        method: 'POST',
+        headers: {
+            authToken
+        },
+        body: {
+            content
+        }
+    }),
+    update: (idTask, authToken, content, status, idTaskList) => ({
+        path: 'task/' + idTask,
+        method: 'POST',
+        headers: {
+            authToken
+        },
+        body: {
+            content,
+            status,
+            idTaskList
+        }
+    }),
+    delete: (idTask, authToken) => ({
+        path: 'task/' + idTask,
+        method: 'DELETE',
+        headers: {
+            authToken
+        }
+    }),
+};
 
 export async function fetchJson(query) {
     const requestInit = {
