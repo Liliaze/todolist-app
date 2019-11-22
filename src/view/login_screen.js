@@ -14,10 +14,29 @@ export function createLoginScreen() {
 }
 
 function createLoginForm() {
-    const usernameLabel = createElement('label', { id: 'username_label', className: 'label' }, 'Username:');
+    const usernameLabel = createElement('label', { className: 'label' }, 'Username:');
     const usernameInput = createElement('input', { type: 'text', required: true, placeholder: 'medialis' });
+    const passwordLabel = createElement('label', { className: 'label' }, 'Password:');
     const passwordInput = createElement('input', { type: 'password', required: true });
-    const passwordLabel = createElement('label', { id: 'password_label', className: 'label' }, 'Password:');
+
+    const form = createElement('div', null, [
+        createElement('div', null, [usernameLabel, usernameInput]),
+        createElement('div', null, [passwordLabel, passwordInput]),
+        createElement('button', {
+            onclick: () => {
+                if (checkValidInputValues()) {
+                    signup(usernameInput.value, passwordInput.value);
+                }
+            }
+        }, 'New Account'),
+        createElement('button', {
+            onclick: () => () => {
+                if (checkValidInputValues()) {
+                    login(usernameInput.value, passwordInput.value);
+                }
+            }
+        }, 'Login'),
+    ]);
 
     const checkValidInputValues = () => {
         let isValid = true;
@@ -35,25 +54,6 @@ function createLoginForm() {
         }
         return isValid;
     };
-
-    const form = createElement('div', null, [
-        createElement('div', null, [usernameLabel, usernameInput]),
-        createElement('div', null, [passwordLabel, passwordInput]),
-        createElement('button', {
-            onclick: () => {
-                if (checkValidInputValues()) {
-                    login(usernameInput.value, passwordInput.value);
-                }
-            }
-        }, 'New Account'),
-        createElement('button', {
-            onclick: () => () => {
-                if (checkValidInputValues()) {
-                    signup(usernameInput.value, passwordInput.value);
-                }
-            }
-        }, 'Login'),
-    ]);
 
     return form;
 }
