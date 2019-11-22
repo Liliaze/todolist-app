@@ -2,17 +2,13 @@ import Config from '../config.js';
 import LocalStorage from '../repository/local_storage.js';
 import { fetcher } from '../repository/fetcher.js';
 import { AccountQueries, TaskListQueries, TaskQueries } from '../repository/api_client.js';
-import { createLoginScreen } from '../view/login_screen.js';
+import { createLoginScreen, createTodoScreen } from '../view/index.js';
 
 const { fetchJson } = fetcher(Config.ApiBaseUrl);
 
 const memory = {
     rootHtmlElement: document.getElementById(Config.rootHtmlElementId)
 };
-
-function initLoginScreen() {
-    memory.loginScreen = createLoginScreen();
-}
 
 function navigateToScreen(screen) {
     while (memory.rootHtmlElement.firstChild) {
@@ -23,9 +19,16 @@ function navigateToScreen(screen) {
 
 export function navigateToLoginScreen() {
     if (!memory.loginScreen) {
-        initLoginScreen();
+        memory.loginScreen = createLoginScreen();
     }
     navigateToScreen(memory.loginScreen);
+}
+
+export function navigateToTodoScreen() {
+    if (!memory.todoScreen) {
+        memory.todoScreen = createTodoScreen();
+    }
+    navigateToScreen(memory.todoScreen);
 }
 
 export function getLocalAuthToken() {
@@ -37,8 +40,8 @@ export async function login(username, password) {
     const authToken = jsonResult.auth_token;
 
     LocalStorage.set('auth_token', authToken);
-
-    return authToken;
+    await loadAllRemoteTasks();
+    navigateToTodoScreen();
 }
 
 export async function loadAllRemoteTasks() {
@@ -46,7 +49,9 @@ export async function loadAllRemoteTasks() {
 
     const { allTaskLists: value } = await fetchJson(TaskListQueries.getAll(authToken));
     console('>>> allTaskLists', allTaskResult);
-    const allTaskResult = await Promise.all(allTaskLists.map(taskList => fetchJson(TaskQueries.getAll(authToken, taskList.taskList_id))));
+    const allTaskResult = await Promise.all(allTaskLists.map(
+        taskList => fetchJson(TaskQueries.getAll(authToken, taskList.taskList_id))
+    ));
     console('>>> allTaskResult', allTaskResult);
 
     // LocalStorage.set('taskCollection', allTaskResult); // TODO: sanitize result before persist
