@@ -6,7 +6,6 @@ async function main() {
     const authToken = getLocalAuthToken();
 
     if (authToken) {
-        console.log(">>> authToken", authToken);
         try {
             await loadAllRemoteTasks();
             navigateToTodoScreen();

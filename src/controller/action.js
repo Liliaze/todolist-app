@@ -7,7 +7,9 @@ import { createLoginScreen, createTodoScreen } from '../view/index.js';
 const { fetchJson } = fetcher(Config.ApiBaseUrl);
 
 const memory = {
-    rootHtmlElement: document.getElementById(Config.rootHtmlElementId)
+    rootHtmlElement: document.getElementById(Config.rootHtmlElementId),
+    loginScreen: createLoginScreen(),
+    todoScreen: createTodoScreen(),
 };
 
 function navigateToScreen(screen) {
@@ -18,16 +20,10 @@ function navigateToScreen(screen) {
 }
 
 export function navigateToLoginScreen() {
-    if (!memory.loginScreen) {
-        memory.loginScreen = createLoginScreen();
-    }
     navigateToScreen(memory.loginScreen);
 }
 
 export function navigateToTodoScreen() {
-    if (!memory.todoScreen) {
-        memory.todoScreen = createTodoScreen();
-    }
     navigateToScreen(memory.todoScreen);
 }
 
