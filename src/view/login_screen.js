@@ -1,5 +1,6 @@
 import { createElement } from '../model/element.js';
 import { login, signup } from '../controller/action.js';
+import { isAlphaNumeric } from './utils.js';
 
 export function createLoginScreen() {
     const screen = createElement('div',
@@ -38,9 +39,7 @@ function createLoginForm() {
         }, 'Login'),
     ]);
 
-    const isAlphaNumeric = ch => {
-        return ch.match(/^[a-z0-9]+$/i) !== null;
-    }
+    
 
     const checkValidInputValues = () => {
         let isValid = true;
