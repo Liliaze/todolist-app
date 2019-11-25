@@ -1,8 +1,15 @@
 import { createElement } from '../model/element.js';
 // import { navigateToLoginScreen } from '../controller/action.js';
-import { getLocalTaskLists, getLocalTasks} from '../controller/action.js';
+import { getLocalTaskLists, getLocalTasksById} from '../controller/action.js';
+import { isAlphaNumeric } from './utils.js';
 
 var taskListSelectedId = 0;
+
+const memory = {
+    taskListDiv: createTaskLists(),
+    newTaskForm: createNewTaskForm(),
+    tasksDiv: createTasks(),
+};
 
 export function createTodoScreen() {
     const screen = createElement('div',
@@ -10,8 +17,9 @@ export function createTodoScreen() {
         [
             createElement('h1', null, 'Todo Lists App'),
             createElement('h2', null, 'tasks lists'),
-            createTaskLists(),
-            createTasks(),
+            memory.taskListDiv,
+            memory.newTaskForm,
+            memory.tasksDiv,
         ]);
 
     return screen;
@@ -19,10 +27,12 @@ export function createTodoScreen() {
 
 function createTaskLists() {
     const taskLists = getLocalTaskLists();
-    const select = createElement('select', null, [
+    const select = createElement('select', { className: 'formDiv', 
+            onchange: () => updateTaskListSelectedId( select.value )}, [
         taskLists.map(taskList => createElement('option',
-        { value: taskList['tasklist_id'], onchange: 'updateTaskListSelectedId(select.value);', onfocus: 'updateTaskListSelectedId(select.value);' },
-        taskList["title"]))]);
+            { value: taskList['tasklist_id'],},
+        taskList["title"]))
+    ]);
 
     console.log(taskLists);
 
@@ -30,17 +40,17 @@ function createTaskLists() {
         select,
         createElement('button', {
             onclick: () => {
-                alert("add a list id : " + select.value);
+                alert("To do : add a list id : " + select.value);
             }
         }, 'ADD'),
         createElement('button', {
             onclick: () => {
-                alert("delete list id : " + select.value);
+                alert("To do : delete list id : " + select.value);
             }
         }, 'DELETE'),
         createElement('button', {
             onclick: () => {
-                alert("update list id : " + select.value);
+                alert("To do : update list id : " + select.value);
             }
         }, 'UPDATE'),
     ]);
@@ -48,34 +58,27 @@ function createTaskLists() {
     return optionList;
 }
 
-function updateSelectedTaskListId() {
-    taskListSelectedId = select.value;
-    alert("update taskLists");
+function updateTaskListSelectedId(selectValue) {
+    taskListSelectedId = selectValue;
+    memory.tasksDiv.replaceContent(createTasks());
 }
 
 function createTasks() {
+    //TO DO call TaskQueries.Update and TaskQueries.Delete
+    const tasks = getLocalTasksById(taskListSelectedId);
 
-    const tasks = [{"task_id":12,"user_id":27,"tasklist_id":32,"content":"finish front todolist4","status":"active","created":"2019-11-22 16:31:40","updated":"2019-11-22 16:31:40"},
-    {"task_id":12,"user_id":27,"tasklist_id":32,"content":"finish front todolist4","status":"active","created":"2019-11-22 16:31:40","updated":"2019-11-22 16:31:40"}];
-    //getLocalTasks(); // TO DO Refactor get LocalTasks to get tasks of one selectedList
-
-    const tasksElement = createElement('div', null, [
+    const tasksElement = createElement('div', { className: 'formDiv' }, [
         createElement('ul', null, [
-            tasks.map(task => createElement('li', null, [
-                task["content"],
+            tasks.map(task => createElement('li', { classname: 'task',  value: task['task_id']}, [
+                task["content"],                
                 createElement('button', {
                     onclick: () => {
-                        alert("add task");
-                    }
-                }, 'ADD'),
-                createElement('button', {
-                    onclick: () => {
-                        alert("delete task");
+                        alert("To do : delete task n°" + task['task_id']);
                     }
                 }, 'DELETE'),
                 createElement('button', {
                     onclick: () => {
-                        alert("update task");
+                        alert("To do : update task n°" + task['task_id']);
                     }
                 }, 'UPDATE'),
             ]
@@ -83,4 +86,37 @@ function createTasks() {
         ]),  
     ]);
     return tasksElement;
+}
+
+function createNewTaskForm() {
+    //TO DO call TaskQueries.Add
+    const contentLabel = createElement('label', { className: 'label' }, 'Title of new task :');
+    const contentInput = createElement('input', { type: 'text', required: true, placeholder: 'Create my new task' });
+
+    const form = createElement('div', { className: 'formDiv' }, [
+        createElement('div', null, [contentLabel, contentInput]),
+        createElement('button', {
+            onclick: () => {
+                if (checkValidInputValues()) {
+                    //addNewTaskInDB(contentInput.value);
+                    alert("To do : create new task ");
+                }
+            }
+        }, 'ADD NEW TASK'),
+    ]);
+    
+    const checkValidInputValues = () => {
+        let isValid = true;
+        
+        if (contentInput.value.length < 1 ||
+            contentInput.value.length > 250 ||
+            !isAlphaNumeric(contentInput.value) ) {
+            isValid = false;
+            contentLabel.className = 'label-error';
+        } else {
+            contentLabel.className = 'label';
+        }
+    }
+
+    return form;
 }
