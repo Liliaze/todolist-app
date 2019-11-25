@@ -56,13 +56,13 @@ export async function loadAllRemoteTasks() {
     console.log('>>> taskLists', allTaskLists);
     LocalStorage.set('taskListCollection', allTaskLists);
 
-    const allTasksResults = await Promise.all(allTaskLists.map(element => getAllTasksFetch(authToken, element)));
+    const allTasksResults = await Promise.all(allTaskLists.map(taskList => getAllTasksFetch(authToken, taskList)));
     console.log('>>> TasksResults', allTasksResults);
     LocalStorage.set('taskCollection', allTasksResults);
 }
 
-async function getAllTasksFetch(authToken, element) {
-    const { value: tasksResults} = await fetchJson(TaskQueries.getAll(authToken, element["tasklist_id"]));
+async function getAllTasksFetch(authToken, taskList) {
+    const { value: tasksResults} = await fetchJson(TaskQueries.getAll(authToken, taskList["tasklist_id"]));
     return tasksResults;
 }
 export function getLocalTaskLists() {

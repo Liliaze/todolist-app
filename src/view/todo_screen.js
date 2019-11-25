@@ -2,6 +2,8 @@ import { createElement } from '../model/element.js';
 // import { navigateToLoginScreen } from '../controller/action.js';
 import { getLocalTaskLists, getLocalTasks} from '../controller/action.js';
 
+var taskListSelectedId = 0;
+
 export function createTodoScreen() {
     const screen = createElement('div',
         { id: 'todo_screen' },
@@ -9,21 +11,18 @@ export function createTodoScreen() {
             createElement('h1', null, 'Todo Lists App'),
             createElement('h2', null, 'tasks lists'),
             createTaskLists(),
+            createTasks(),
         ]);
 
     return screen;
 }
-/*
-<SELECT name="nom" size="1">
-<OPTION>lundi
-<OPTION>mardi
-<OPTION>mercredi
-<OPTION>jeudi
-<OPTION>vendredi
-</SELECT>*/
+
 function createTaskLists() {
     const taskLists = getLocalTaskLists();
-    const select = createElement('select', null, [taskLists.map(element => createElement('option', { value: element["tasklist_id"] }, element["title"]))]);
+    const select = createElement('select', null, [
+        taskLists.map(taskList => createElement('option',
+        { value: taskList['tasklist_id'], onchange: 'updateTaskListSelectedId(select.value);', onfocus: 'updateTaskListSelectedId(select.value);' },
+        taskList["title"]))]);
 
     console.log(taskLists);
 
@@ -31,9 +30,9 @@ function createTaskLists() {
         select,
         createElement('button', {
             onclick: () => {
-                alert("display list id : " + select.value);
+                alert("add a list id : " + select.value);
             }
-        }, 'DISPLAY'),
+        }, 'ADD'),
         createElement('button', {
             onclick: () => {
                 alert("delete list id : " + select.value);
@@ -44,34 +43,26 @@ function createTaskLists() {
                 alert("update list id : " + select.value);
             }
         }, 'UPDATE'),
-        createTasks(select.value),
     ]);
+    taskListSelectedId = select.value;
     return optionList;
 }
 
-function createTasks(selectedTaskListId) {
+function updateSelectedTaskListId() {
+    taskListSelectedId = select.value;
+    alert("update taskLists");
+}
 
-    const tasks = getLocalTasks(); // TO DO Refactor get LocalTasks to get tasks of one selectedList
+function createTasks() {
+
+    const tasks = [{"task_id":12,"user_id":27,"tasklist_id":32,"content":"finish front todolist4","status":"active","created":"2019-11-22 16:31:40","updated":"2019-11-22 16:31:40"},
+    {"task_id":12,"user_id":27,"tasklist_id":32,"content":"finish front todolist4","status":"active","created":"2019-11-22 16:31:40","updated":"2019-11-22 16:31:40"}];
+    //getLocalTasks(); // TO DO Refactor get LocalTasks to get tasks of one selectedList
 
     const tasksElement = createElement('div', null, [
         createElement('ul', null, [
-            createElement('li', null, ["TASK ONE " + selectedTaskListId,
-            createElement('button', {
-                onclick: () => {
-                    alert("add task");
-                }
-            }, 'ADD'),
-            createElement('button', {
-                onclick: () => {
-                    alert("delete task");
-                }
-            }, 'DELETE'),
-            createElement('button', {
-                onclick: () => {
-                    alert("update task");
-                }
-            }, 'UPDATE'),]),
-            createElement('li', null, ["TASK TWO",
+            tasks.map(task => createElement('li', null, [
+                task["content"],
                 createElement('button', {
                     onclick: () => {
                         alert("add task");
@@ -86,9 +77,10 @@ function createTasks(selectedTaskListId) {
                     onclick: () => {
                         alert("update task");
                     }
-                }, 'UPDATE'),]),
-        ]),
-        
+                }, 'UPDATE'),
+            ]
+            ))
+        ]),  
     ]);
     return tasksElement;
 }
