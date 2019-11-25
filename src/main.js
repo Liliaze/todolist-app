@@ -1,21 +1,24 @@
 import { getLocalAuthToken, navigateToLoginScreen, navigateToTodoScreen, loadAllRemoteTasks } from './controller/action.js';
+import { setupErrorHandler } from './controller/errorHandler.js';
 
 window.addEventListener('load', main);
 
 async function main() {
-    const authToken = getLocalAuthToken();
+  setupErrorHandler(error => alert(error.message)); // TODO: to improve
 
-    if (authToken) {
-        try {
-            await loadAllRemoteTasks();
-            navigateToTodoScreen();
-        } catch (error) {
-            if (!error.response || error.response.status !== 401) {
-                console.error(error);
-            }
-            navigateToLoginScreen();
-        }
-    } else {
-        navigateToLoginScreen();
+  const authToken = getLocalAuthToken();
+
+  if (authToken) {
+    try {
+      await loadAllRemoteTasks();
+      navigateToTodoScreen();
+    } catch (error) {
+      if (!error.response || error.response.status !== 401) {
+        throw error;
+      }
+      navigateToLoginScreen();
     }
+  } else {
+    navigateToLoginScreen();
+  }
 }
