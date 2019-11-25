@@ -13,7 +13,7 @@ export function fetcher(baseUrl) {
 
             if (response.ok) {
                 const result = await response.json();
-
+                
                 return result;
             } else {
                 const error = new Error(response.statusText);

@@ -38,15 +38,22 @@ function createLoginForm() {
         }, 'Login'),
     ]);
 
+    const isAlphaNumeric = ch => {
+        return ch.match(/^[a-z0-9]+$/i) !== null;
+    }
+
     const checkValidInputValues = () => {
         let isValid = true;
-        if (usernameInput.value.length < 3) {
+        if (usernameInput.value.length < 2 ||
+            usernameInput.value.length > 30 ||
+            !isAlphaNumeric(usernameInput.value) ) {
             isValid = false;
             usernameLabel.className = 'label-error';
         } else {
             usernameLabel.className = 'label';
         }
-        if (passwordInput.value.length < 3) {
+        if (passwordInput.value.length < 6 ||
+                passwordInput.value.length > 30) {
             isValid = false;
             passwordLabel.className = 'label-error';
         } else {
