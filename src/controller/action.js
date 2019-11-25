@@ -53,26 +53,28 @@ export async function loadAllRemoteTasks() {
     const authToken = getLocalAuthToken();
 
     const { value: allTaskLists } = await fetchJson(TaskListQueries.getAll(authToken));
-    console.log('>>> taskLists', allTaskLists);
     LocalStorage.set('taskListCollection', allTaskLists);
 
     const allTasksResults = await Promise.all(allTaskLists.map(taskList => getAllTasksFetch(authToken, taskList)));
-    console.log('>>> TasksResults', allTasksResults);
     LocalStorage.set('taskCollection', allTasksResults);
 }
 
 async function getAllTasksFetch(authToken, taskList) {
     const { value: tasksResults} = await fetchJson(TaskQueries.getAll(authToken, taskList["tasklist_id"]));
+    LocalStorage.set('taskCollection_'+taskList["tasklist_id"], tasksResults);
     return tasksResults;
 }
 export function getLocalTaskLists() {
     const taskListsCollection = LocalStorage.get('taskListCollection');
-    console.log('>>> taskCollection', taskListsCollection);
-    return taskListsCollection;
+    return taskListsCollection || [];
 }
 
 export function getLocalTasks() {
     const taskCollection = LocalStorage.get('taskCollection');
-    console.log('>>> taskCollection', taskCollection);
-    // TODO: map result with model createTask
+    return taskCollection || [];
+}
+
+export function getLocalTasksById(task_id) {
+    const taskCollectionById = LocalStorage.get('taskCollection_'+ task_id);
+    return taskCollectionById || [];
 }
