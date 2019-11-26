@@ -3,6 +3,7 @@ import LocalStorage from '../repository/local_storage.js';
 import { fetcher } from '../repository/fetcher.js';
 import { AccountQueries, TaskListQueries, TaskQueries } from '../repository/api_client.js';
 import { createLoginScreen, createTodoScreen, refreshTodoScreen } from '../view/index.js';
+import { refreshTaskListElement } from '../view/todo_screen.js';
 
 const { fetchJson } = fetcher(Config.ApiBaseUrl);
 
@@ -26,12 +27,13 @@ export function navigateToLoginScreen() {
 
 export async function navigateToTodoScreen() {
   await loadAllRemoteTasks();
+  refreshTodoScreen();
   memory.todoScreen = createTodoScreen();
   navigateToScreen(memory.todoScreen);
 }
 
 export function logout() {
-  localStorage.clear();
+  LocalStorage.clear();
   navigateToLoginScreen();
 }
 
@@ -44,9 +46,7 @@ export async function login(username, password) {
   const authToken = jsonResult.auth_token;
 
   LocalStorage.set('auth_token', authToken);
-  await loadAllRemoteTasks();
-  memory.todoScreen = refreshTodoScreen();
-  navigateToScreen(memory.todoScreen);
+  navigateToTodoScreen();
 }
 
 export async function signup(username, password) {
@@ -54,8 +54,17 @@ export async function signup(username, password) {
   const authToken = jsonResult.auth_token;
 
   LocalStorage.set('auth_token', authToken);
-  refreshTodoScreen();
   navigateToTodoScreen();
+}
+
+export async function addTaskList(title) {
+  const authToken = getLocalAuthToken();
+
+  const jsonResult = await fetchJson(TaskListQueries.create(authToken, title));
+
+  const { value: allTaskLists } = await fetchJson(TaskListQueries.getAll(authToken));
+  LocalStorage.replace('taskListCollection', allTaskLists);
+  refreshTaskListElement();
 }
 
 export async function loadAllRemoteTasks() {
