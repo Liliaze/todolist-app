@@ -1,28 +1,42 @@
 import { createElement } from '../model/element.js';
 // import { navigateToLoginScreen } from '../controller/action.js';
-import { getLocalTaskLists, getLocalTasksById } from '../controller/action.js';
+import { getLocalTaskLists, getLocalTasksById, logout } from '../controller/action.js';
 import { isAlphaNumeric } from './utils.js';
 
 var taskListSelectedId = 0;
 
 const memory = {
-  taskListDiv: createTaskLists(),
-  newTaskForm: createNewTaskForm(),
-  tasksDiv: createTasks(),
+  taskListDiv: null,
+  newTaskForm: null,
+  tasksDiv: null,
+  logoutButton: null,
 };
 
 export function createTodoScreen() {
+
   const screen = createElement('div',
     { id: 'todo_screen' },
     [
       createElement('h1', null, 'Todo Lists App'),
+      memory.logoutButton = createLogoutButton(),
       createElement('h2', null, 'tasks lists'),
-      memory.taskListDiv,
-      memory.newTaskForm,
-      memory.tasksDiv,
+      memory.taskListDiv = createTaskLists(),
+      memory.newTaskForm = createNewTaskForm(),
+      memory.tasksDiv = createTasks(),
     ]);
-
   return screen;
+}
+
+function createLogoutButton() {
+  const logoutButton = createElement('div', null, [
+    createElement('button', {
+      id: "logoutButton",
+      onclick: () => {
+        logout();
+      }
+    }, 'LOGOUT'),
+  ])
+  return logoutButton;
 }
 
 function createTaskLists() {
@@ -71,7 +85,7 @@ function createTasks() {
 
   const tasksElement = createElement('div', { className: 'formDiv' }, [
     createElement('ul', null, [
-      tasks.map(task => createElement('li', { classname: 'task', value: task['task_id'] }, [
+      tasks.map(task => createElement('li', { className: 'task', value: task['task_id'] }, [
         task["content"],
         createElement('button', {
           onclick: () => {
