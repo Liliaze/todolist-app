@@ -6,10 +6,11 @@ import { isAlphaNumeric } from './utils.js';
 var taskListSelectedId = 0;
 
 const memory = {
+  logoutButton: null,
+  newTaskListForm: null,
   taskListDiv: null,
   newTaskForm: null,
   tasksDiv: null,
-  logoutButton: null,
 };
 
 export function createTodoScreen() {
@@ -19,8 +20,11 @@ export function createTodoScreen() {
     [
       createElement('h1', null, 'Todo Lists App'),
       memory.logoutButton = createLogoutButton(),
-      createElement('h2', null, 'tasks lists'),
+      createElement('h2', null, 'Choose your list :'),
+      memory.newTaskListForm = createNewTaskListForm(),
       memory.taskListDiv = createTaskLists(),
+
+      createElement('h2', null, 'Follow and update your tasks :'),
       memory.newTaskForm = createNewTaskForm(),
       memory.tasksDiv = createTasks(),
     ]);
@@ -41,6 +45,9 @@ function createLogoutButton() {
 
 function createTaskLists() {
   const taskLists = getLocalTaskLists();
+  if (!taskLists.length) {
+    return;
+  }
   const select = createElement('select', {
     className: 'formDiv',
     onchange: () => updateTaskListSelectedId(select.value)
@@ -50,15 +57,8 @@ function createTaskLists() {
       taskList["title"]))
   ]);
 
-  console.log(taskLists);
-
   const optionList = createElement('div', null, [
     select,
-    createElement('button', {
-      onclick: () => {
-        alert("To do : add a list id : " + select.value);
-      }
-    }, 'ADD'),
     createElement('button', {
       onclick: () => {
         alert("To do : delete list id : " + select.value);
@@ -83,6 +83,9 @@ function createTasks() {
   //TO DO call TaskQueries.Update and TaskQueries.Delete
   const tasks = getLocalTasksById(taskListSelectedId);
 
+  if (!tasks.length) {
+    return;
+  }
   const tasksElement = createElement('div', { className: 'formDiv' }, [
     createElement('ul', null, [
       tasks.map(task => createElement('li', { className: 'task', value: task['task_id'] }, [
@@ -110,15 +113,48 @@ function createNewTaskForm() {
   const contentInput = createElement('input', { type: 'text', required: true, placeholder: 'Create my new task' });
 
   const form = createElement('div', { className: 'formDiv' }, [
-    createElement('div', null, [contentLabel, contentInput]),
-    createElement('button', {
-      onclick: () => {
-        if (checkValidInputValues()) {
-          //addNewTaskInDB(contentInput.value);
-          alert("To do : create new task ");
+    createElement('div', null, [contentLabel, contentInput,
+      createElement('button', {
+        onclick: () => {
+          if (checkValidInputValues()) {
+            //addNewTaskInDB(contentInput.value);
+            alert("To do : create new task ");
+          }
         }
-      }
-    }, 'ADD NEW TASK'),
+      }, 'ADD NEW TASK'),])
+  ]);
+
+  const checkValidInputValues = () => {
+    let isValid = true;
+
+    if (contentInput.value.length < 1 ||
+      contentInput.value.length > 250 ||
+      !isAlphaNumeric(contentInput.value)) {
+      isValid = false;
+      contentLabel.className = 'label-error';
+    } else {
+      contentLabel.className = 'label';
+    }
+  }
+
+  return form;
+}
+
+function createNewTaskListForm() {
+  //TO DO call TaskQueries.Add
+  const contentLabel = createElement('label', { className: 'label' }, 'Title of new taskList :');
+  const contentInput = createElement('input', { type: 'text', required: true, placeholder: 'Create my new list' });
+
+  const form = createElement('div', { className: 'formDiv' }, [
+    createElement('div', null, [contentLabel, contentInput,
+      createElement('button', {
+        onclick: () => {
+          if (checkValidInputValues()) {
+            //addNewTaskListInDB(contentInput.value);
+            alert("To do : create new list ");
+          }
+        }
+      }, 'ADD NEW LIST'),])
   ]);
 
   const checkValidInputValues = () => {
