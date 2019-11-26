@@ -23,20 +23,21 @@ function createLoginForm() {
   const form = createElement('div', null, [
     createElement('div', null, [usernameLabel, usernameInput]),
     createElement('div', null, [passwordLabel, passwordInput]),
-    createElement('button', {
-      onclick: () => {
-        if (checkValidInputValues()) {
-          signup(usernameInput.value, passwordInput.value);
+    createElement('div', { id: 'connectionButtonDiv' }, [
+      createElement('button', {
+        onclick: () => {
+          if (checkValidInputValues()) {
+            signup(usernameInput.value, passwordInput.value);
+          }
         }
-      }
-    }, 'New Account'),
-    createElement('button', {
-      onclick: () => {
-        if (checkValidInputValues()) {
-          login(usernameInput.value, passwordInput.value);
+      }, 'New Account'),
+      createElement('button', {
+        onclick: () => {
+          if (checkValidInputValues()) {
+            login(usernameInput.value, passwordInput.value);
+          }
         }
-      }
-    }, 'Login'),
+      }, 'Login'),])
   ]);
 
 

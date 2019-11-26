@@ -91,11 +91,13 @@ function createTasks() {
       tasks.map(task => createElement('li', { className: 'task', value: task['task_id'] }, [
         task["content"],
         createElement('button', {
+          className: 'deleteTaskButton',
           onclick: () => {
             alert("To do : delete task n°" + task['task_id']);
           }
         }, 'DELETE'),
         createElement('button', {
+          className: 'updateTaskButton',
           onclick: () => {
             alert("To do : update task n°" + task['task_id']);
           }
