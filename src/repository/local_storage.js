@@ -9,6 +9,9 @@ const LocalStorage = {
 
     window.localStorage.setItem(key, jsonValue);
   },
+  remove: function (key) {
+    window.localStorage.removeItem(key);
+  }
 };
 
 export default LocalStorage;
