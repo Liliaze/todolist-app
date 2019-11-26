@@ -3,6 +3,9 @@
   "editor.formatOnSave": true,
   "eslint.autoFixOnSave": true,
   "eslint.validate": [
-    "javascript",
+    "javascript"
+  ],
+  "cSpell.words": [
+    "unhandledrejection"
   ]
 }
