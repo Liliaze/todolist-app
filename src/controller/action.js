@@ -8,8 +8,8 @@ const { fetchJson } = fetcher(Config.ApiBaseUrl);
 
 const memory = {
   rootHtmlElement: document.getElementById(Config.rootHtmlElementId),
-  loginScreen: createLoginScreen(),
-  todoScreen: createTodoScreen(),
+  loginScreen: null,
+  todoScreen: null,
 };
 
 function navigateToScreen(screen) {
@@ -20,16 +20,18 @@ function navigateToScreen(screen) {
 }
 
 export function navigateToLoginScreen() {
+  memory.loginScreen = createLoginScreen();
   navigateToScreen(memory.loginScreen);
 }
 
-export function navigateToTodoScreen() {
-  // TODO: load tasks and tasklists here?
+export async function navigateToTodoScreen() {
+  await loadAllRemoteTasks();
+  memory.todoScreen = createTodoScreen();
   navigateToScreen(memory.todoScreen);
 }
 
 export function logout() {
-  LocalStorage.remove('auth_token');
+  localStorage.clear();
   navigateToLoginScreen();
 }
 
@@ -42,7 +44,6 @@ export async function login(username, password) {
   const authToken = jsonResult.auth_token;
 
   LocalStorage.set('auth_token', authToken);
-  await loadAllRemoteTasks();
   navigateToTodoScreen();
 }
 
@@ -51,7 +52,6 @@ export async function signup(username, password) {
   const authToken = jsonResult.auth_token;
 
   LocalStorage.set('auth_token', authToken);
-  await loadAllRemoteTasks();
   navigateToTodoScreen();
 }
 
