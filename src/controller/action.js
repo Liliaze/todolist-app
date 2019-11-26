@@ -24,7 +24,13 @@ export function navigateToLoginScreen() {
 }
 
 export function navigateToTodoScreen() {
+  // TODO: load tasks and tasklists here?
   navigateToScreen(memory.todoScreen);
+}
+
+export function logout() {
+  LocalStorage.remove('auth_token');
+  navigateToLoginScreen();
 }
 
 export function getLocalAuthToken() {
