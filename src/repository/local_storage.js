@@ -11,6 +11,15 @@ const LocalStorage = {
   },
   remove: function (key) {
     window.localStorage.removeItem(key);
+  },
+  replace: function (key, value) {
+    window.localStorage.removeItem(key);
+    const jsonValue = JSON.stringify({ value });
+
+    window.localStorage.setItem(key, jsonValue);
+  },
+  clear: function () {
+    window.localStorage.clear();
   }
 };
 
