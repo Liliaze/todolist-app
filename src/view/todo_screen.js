@@ -21,9 +21,8 @@ export function createTodoScreen() {
       createElement('h1', null, 'Todo Lists App'),
       memory.logoutButton = createLogoutButton(),
       createElement('h2', null, 'Choose your list :'),
-      memory.newTaskListForm = createNewTaskListForm(),
       memory.taskListDiv = createTaskLists(),
-
+      memory.newTaskListForm = createNewTaskListForm(),
       createElement('h2', null, 'Follow and update your tasks :'),
       memory.newTaskForm = createNewTaskForm(),
       memory.tasksDiv = createTasks(),
@@ -111,11 +110,10 @@ function createTasks() {
 
 function createNewTaskForm() {
   //TO DO call TaskQueries.Add
-  const contentLabel = createElement('label', { className: 'label' }, 'Title of new task :');
   const contentInput = createElement('input', { type: 'text', required: true, placeholder: 'Create my new task' });
 
   const form = createElement('div', { className: 'formDiv' }, [
-    createElement('div', null, [contentLabel, contentInput,
+    createElement('div', null, [contentInput,
       createElement('button', {
         onclick: () => {
           if (checkValidInputValues()) {
@@ -126,29 +124,15 @@ function createNewTaskForm() {
       }, 'ADD NEW TASK'),])
   ]);
 
-  const checkValidInputValues = () => {
-    let isValid = true;
-
-    if (contentInput.value.length < 1 ||
-      contentInput.value.length > 250 ||
-      !isAlphaNumeric(contentInput.value)) {
-      isValid = false;
-      contentLabel.className = 'label-error';
-    } else {
-      contentLabel.className = 'label';
-    }
-  }
-
   return form;
 }
 
 function createNewTaskListForm() {
   //TO DO call TaskQueries.Add
-  const contentLabel = createElement('label', { className: 'label' }, 'Title of new taskList :');
   const contentInput = createElement('input', { type: 'text', required: true, placeholder: 'Create my new list' });
 
   const form = createElement('div', { className: 'formDiv' }, [
-    createElement('div', null, [contentLabel, contentInput,
+    createElement('div', null, [contentInput,
       createElement('button', {
         onclick: () => {
           if (checkValidInputValues()) {
@@ -158,19 +142,6 @@ function createNewTaskListForm() {
         }
       }, 'ADD NEW LIST'),])
   ]);
-
-  const checkValidInputValues = () => {
-    let isValid = true;
-
-    if (contentInput.value.length < 1 ||
-      contentInput.value.length > 250 ||
-      !isAlphaNumeric(contentInput.value)) {
-      isValid = false;
-      contentLabel.className = 'label-error';
-    } else {
-      contentLabel.className = 'label';
-    }
-  }
 
   return form;
 }
