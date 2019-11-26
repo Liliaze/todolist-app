@@ -6,12 +6,21 @@ import { isAlphaNumeric } from './utils.js';
 var taskListSelectedId = 0;
 
 const memory = {
-  logoutButton: null,
-  newTaskListForm: null,
-  taskListDiv: null,
-  newTaskForm: null,
-  tasksDiv: null,
+  logoutButton: createLogoutButton(),
+  newTaskListForm: createTaskLists(),
+  taskListDiv: createNewTaskListForm(),
+  newTaskForm: createNewTaskForm(),
+  tasksDiv: createTasks(),
 };
+
+export function refreshTodoScreen() {
+  memory.logoutButton = createLogoutButton();
+  memory.taskListDiv = createTaskLists();
+  memory.newTaskListForm = createNewTaskListForm();
+  memory.newTaskForm = createNewTaskForm();
+  memory.tasksDiv = createTasks();
+  return createTodoScreen();
+}
 
 export function createTodoScreen() {
 
@@ -19,13 +28,13 @@ export function createTodoScreen() {
     { id: 'todo_screen' },
     [
       createElement('h1', null, 'Todo Lists App'),
-      memory.logoutButton = createLogoutButton(),
+      memory.logoutButton,
       createElement('h2', null, 'Choose your list :'),
-      memory.taskListDiv = createTaskLists(),
-      memory.newTaskListForm = createNewTaskListForm(),
+      memory.taskListDiv,
+      memory.newTaskListForm,
       createElement('h2', null, 'Follow and update your tasks :'),
-      memory.newTaskForm = createNewTaskForm(),
-      memory.tasksDiv = createTasks(),
+      memory.newTaskForm,
+      memory.tasksDiv,
     ]);
   return screen;
 }
@@ -49,7 +58,10 @@ function createTaskLists() {
   }
   const select = createElement('select', {
     className: 'formDiv',
-    onchange: () => updateTaskListSelectedId(select.value)
+    onchange: () => {
+      taskListSelectedId = selectValue;
+      memory.tasksDiv.replaceContent(createTasks());
+    }
   }, [
     taskLists.map(taskList => createElement('option',
       { value: taskList['tasklist_id'], },
@@ -60,12 +72,12 @@ function createTaskLists() {
     select,
     createElement('button', {
       onclick: () => {
-        alert("To do : delete list id : " + select.value);
+        //handlerDeleteTaskList(select.value);
       }
     }, 'DELETE'),
     createElement('button', {
       onclick: () => {
-        alert("To do : update list id : " + select.value);
+        //handlerUpdateTaskList(select.value);
       }
     }, 'UPDATE'),
   ]);
@@ -73,10 +85,6 @@ function createTaskLists() {
   return optionList;
 }
 
-function updateTaskListSelectedId(selectValue) {
-  taskListSelectedId = selectValue;
-  memory.tasksDiv.replaceContent(createTasks());
-}
 
 function createTasks() {
   //TO DO call TaskQueries.Update and TaskQueries.Delete

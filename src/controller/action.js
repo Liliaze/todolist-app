@@ -2,7 +2,7 @@ import Config from '../config.js';
 import LocalStorage from '../repository/local_storage.js';
 import { fetcher } from '../repository/fetcher.js';
 import { AccountQueries, TaskListQueries, TaskQueries } from '../repository/api_client.js';
-import { createLoginScreen, createTodoScreen } from '../view/index.js';
+import { createLoginScreen, createTodoScreen, refreshTodoScreen } from '../view/index.js';
 
 const { fetchJson } = fetcher(Config.ApiBaseUrl);
 
@@ -44,7 +44,9 @@ export async function login(username, password) {
   const authToken = jsonResult.auth_token;
 
   LocalStorage.set('auth_token', authToken);
-  navigateToTodoScreen();
+  await loadAllRemoteTasks();
+  memory.todoScreen = refreshTodoScreen();
+  navigateToScreen(memory.todoScreen);
 }
 
 export async function signup(username, password) {
@@ -52,6 +54,7 @@ export async function signup(username, password) {
   const authToken = jsonResult.auth_token;
 
   LocalStorage.set('auth_token', authToken);
+  refreshTodoScreen();
   navigateToTodoScreen();
 }
 
