@@ -3,14 +3,13 @@ import { setupErrorHandler } from './controller/errorHandler.js';
 
 window.addEventListener('load', main);
 
-async function main() {
+function main() {
   setupErrorHandler(error => alert(error.message)); // TODO: to improve
 
   const authToken = getLocalAuthToken();
 
   if (authToken) {
     try {
-      await loadAllRemoteTasks();
       navigateToTodoScreen();
     } catch (error) {
       if (!error.response || error.response.status !== 401) {
