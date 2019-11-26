@@ -23,7 +23,7 @@ function createLoginForm() {
   const form = createElement('div', null, [
     createElement('div', null, [usernameLabel, usernameInput]),
     createElement('div', null, [passwordLabel, passwordInput]),
-    createElement('div', { id: 'connectionButtonDiv' }, [
+    createElement('div', { id: 'connectionButton' }, [
       createElement('button', {
         onclick: () => {
           if (checkValidInputValues()) {
