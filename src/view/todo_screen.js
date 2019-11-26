@@ -1,6 +1,6 @@
 import { createElement } from '../model/element.js';
 // import { navigateToLoginScreen } from '../controller/action.js';
-import { getLocalTaskLists, getLocalTasksById, logout } from '../controller/action.js';
+import { getLocalTaskLists, getLocalTasksById, logout, addTaskList } from '../controller/action.js';
 import { isAlphaNumeric } from './utils.js';
 
 var taskListSelectedId = 0;
@@ -14,12 +14,15 @@ const memory = {
 };
 
 export function refreshTodoScreen() {
-  memory.logoutButton = createLogoutButton();
-  memory.taskListDiv = createTaskLists();
-  memory.newTaskListForm = createNewTaskListForm();
-  memory.newTaskForm = createNewTaskForm();
-  memory.tasksDiv = createTasks();
-  return createTodoScreen();
+  memory.logoutButton.replaceContent(createLogoutButton());
+  memory.taskListDiv.replaceContent(createTaskLists());
+  memory.newTaskListForm.replaceContent(createNewTaskListForm());
+  memory.newTaskForm.replaceContent(createNewTaskForm());
+  memory.tasksDiv.replaceContent(createTasks());
+}
+
+export function refreshTaskListElement() {
+  memory.taskListDiv.replaceContent(createTaskLists());
 }
 
 export function createTodoScreen() {
@@ -54,12 +57,12 @@ function createLogoutButton() {
 function createTaskLists() {
   const taskLists = getLocalTaskLists();
   if (!taskLists.length) {
-    return;
+    return createElement('div', null, []);
   }
   const select = createElement('select', {
     className: 'formDiv',
     onchange: () => {
-      taskListSelectedId = selectValue;
+      taskListSelectedId = select.value;
       memory.tasksDiv.replaceContent(createTasks());
     }
   }, [
@@ -91,7 +94,7 @@ function createTasks() {
   const tasks = getLocalTasksById(taskListSelectedId);
 
   if (!tasks.length) {
-    return;
+    return createElement('div', null, []);
   }
   const tasksElement = createElement('div', { className: 'formDiv' }, [
     createElement('ul', null, [
@@ -143,10 +146,7 @@ function createNewTaskListForm() {
     createElement('div', null, [contentInput,
       createElement('button', {
         onclick: () => {
-          if (checkValidInputValues()) {
-            //addNewTaskListInDB(contentInput.value);
-            alert("To do : create new list ");
-          }
+          addTaskList(contentInput.value);
         }
       }, 'ADD NEW LIST'),])
   ]);
