@@ -9,8 +9,8 @@ const { fetchJson } = fetcher(Config.ApiBaseUrl);
 
 const memory = {
   rootHtmlElement: document.getElementById(Config.rootHtmlElementId),
-  loginScreen: null,
-  todoScreen: null,
+  loginScreen: createLoginScreen(),
+  todoScreen: createTodoScreen(),
 };
 
 function navigateToScreen(screen) {
@@ -21,14 +21,13 @@ function navigateToScreen(screen) {
 }
 
 export function navigateToLoginScreen() {
-  memory.loginScreen = createLoginScreen();
+  memory.loginScreen;
   navigateToScreen(memory.loginScreen);
 }
 
 export async function navigateToTodoScreen() {
   await loadAllRemoteTasks();
   refreshTodoScreen();
-  memory.todoScreen = createTodoScreen();
   navigateToScreen(memory.todoScreen);
 }
 
