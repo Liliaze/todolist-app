@@ -1,6 +1,6 @@
 import { createElement } from '../model/element.js';
 // import { navigateToLoginScreen } from '../controller/action.js';
-import { getLocalTaskLists, getLocalTasksById, logout, addTaskList } from '../controller/action.js';
+import { getLocalTaskLists, getLocalTasksById, logout, addTaskList, deleteTaskList, updateTaskList, addTask, deleteTask, doneTask, updateTask } from '../controller/action.js';
 import { isAlphaNumeric } from './utils.js';
 
 var taskListSelectedId = 0;
@@ -23,6 +23,11 @@ export function refreshTodoScreen() {
 
 export function refreshTaskListElement() {
   memory.taskListDiv.replaceContent(createTaskLists());
+  refreshTasksElement();
+}
+
+export function refreshTasksElement() {
+  memory.tasksDiv.replaceContent(createTasks());
 }
 
 export function createTodoScreen() {
@@ -59,6 +64,7 @@ function createTaskLists() {
   if (!taskLists.length) {
     return createElement('div', null, []);
   }
+
   const select = createElement('select', {
     className: 'formDiv',
     onchange: () => {
@@ -75,14 +81,18 @@ function createTaskLists() {
     select,
     createElement('button', {
       onclick: () => {
-        //handlerDeleteTaskList(select.value);
+        deleteTaskList(select.value);
       }
-    }, 'DELETE'),
+    }, createElement('i', { className: "fas fa-trash" })),
     createElement('button', {
       onclick: () => {
-        //handlerUpdateTaskList(select.value);
+
+        var newTitle = prompt("Please enter your new name for this taskList", "");
+        if (newTitle !== null && newTitle !== "") {
+          updateTaskList(newTitle, taskListSelectedId);
+        }
       }
-    }, 'UPDATE'),
+    }, createElement('i', { className: "fas fa-pencil-alt" })),
   ]);
   taskListSelectedId = select.value;
   return optionList;
@@ -98,20 +108,28 @@ function createTasks() {
   }
   const tasksElement = createElement('div', { className: 'formDiv' }, [
     createElement('ul', null, [
-      tasks.map(task => createElement('li', { className: 'task', value: task['task_id'] }, [
-        task["content"],
+      tasks.map(task => createElement('li', { className: 'task' + task['status'], value: task['task_id'] }, [
         createElement('button', {
           className: 'deleteTaskButton',
           onclick: () => {
-            alert("To do : delete task n°" + task['task_id']);
+            deleteTask(task['task_id']);
           }
-        }, 'DELETE'),
+        }, createElement('i', { className: "fas fa-trash" })),
         createElement('button', {
           className: 'updateTaskButton',
           onclick: () => {
-            alert("To do : update task n°" + task['task_id']);
+            var newContent = prompt("Please enter your new task", task['content']);
+            if (newContent !== null && newContent !== "") {
+              updateTask(task['task_id'], newContent, task['status'], task['tasklist_id']);
+            }
           }
-        }, 'UPDATE'),
+        }, createElement('i', { className: "fas fa-pencil-alt" })),
+        createElement('button', {
+          className: 'doneTaskButton',
+          onclick: () => {
+            doneTask(task['task_id'], task['content'], task['status'], task['tasklist_id']);
+          }
+        }, createElement('p', null, task["content"])),
       ]
       ))
     ]),
@@ -127,12 +145,9 @@ function createNewTaskForm() {
     createElement('div', null, [contentInput,
       createElement('button', {
         onclick: () => {
-          if (checkValidInputValues()) {
-            //addNewTaskInDB(contentInput.value);
-            alert("To do : create new task ");
-          }
+          addTask(taskListSelectedId, contentInput.value);
         }
-      }, 'ADD NEW TASK'),])
+      }, createElement('i', { className: "fas fa-plus" })),])
   ]);
 
   return form;
@@ -148,7 +163,7 @@ function createNewTaskListForm() {
         onclick: () => {
           addTaskList(contentInput.value);
         }
-      }, 'ADD NEW LIST'),])
+      }, createElement('i', { className: "fas fa-plus" })),])
   ]);
 
   return form;
