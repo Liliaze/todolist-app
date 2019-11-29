@@ -15,7 +15,10 @@ div {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  align-content: space-around ;
+}
+
+h1, h2 {
+  margin: 0;
 }
 
 
@@ -42,12 +45,13 @@ li p {
   flex-direction: row;
   justify-content: start;
   vertical-align:middle;
-  min-width: 20vw;
+  width: 30vw;
   background: #FFFFFF;
   margin: 0.1em;
   margin-left: 0.4em;
   padding-left: 0.4em;
   flex-wrap: wrap-reverse;
+  overflow: auto;
 }
 
 li.taskactive p{
@@ -55,7 +59,7 @@ li.taskactive p{
 }
 
 li.taskdone p{
-  background: #FFFFFF;
+  color:green;
   text-decoration: line-through;
 }
 
@@ -71,12 +75,14 @@ label, input, select{
   border-radius:0.16em;
   margin:0.2em 0 0.2em 0;
   padding:0.46em ;
+  overflow: hidden;
+  width: 30vw;
 }
 
 /* ================ BUTTON ================ */
 
 button {
-  margin: 0.1em;
+  margin: 0em;
   padding: 0.4em;
   display:inline-block;
   border:0.1em solid #c3d3da;
@@ -85,6 +91,7 @@ button {
   text-align:center;
   transition: all 0.15s;
 }
+
 button:hover {
   color:rgb(20, 75, 6);
   border-color:rgb(118, 226, 124);
