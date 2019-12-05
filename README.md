@@ -2,7 +2,7 @@
 
 ## SET-UP DEV ENVIRONMENT
 
-> Warning : this project need your install the API project  ['todolist'](https://github.com/Liliaze/todolist.git) from github.
+> Warning : this project need your install the API project  ['Todolist_API'](https://github.com/Liliaze/TODOLIST_API) from github.
 
 ### Commands to set-up repository 
 
