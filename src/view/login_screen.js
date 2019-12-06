@@ -31,13 +31,14 @@ function createLoginForm() {
           }
         }
       }, 'New Account'),
-      createElement('button', {
+      createElement('button', self => ({
         onclick: () => {
+          console.log({ self });
           if (checkValidInputValues()) {
             login(usernameInput.value, passwordInput.value);
           }
         }
-      }, 'Login'),])
+      }), 'Login'),])
   ]);
 
 
