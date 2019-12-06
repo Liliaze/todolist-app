@@ -7,9 +7,9 @@ export const StorageAction = Object.freeze({
 
 /**
  *
- * @param {{get: key => value, set: (key, value) => void, remove: key => void, clear: () => void}} storageAdapter
+ * @param {{get: (key) => value, set: (key, value) => void, remove: (key) => void, clear: () => void}} storageAdapter
  */
-export const Storage = storageAdapter => {
+export const storage = storageAdapter => {
   const listeners = {}; // : Array<{ [key: string]: Array<(newValue: mixed) => void> }>
 
   return {
@@ -41,5 +41,3 @@ export const Storage = storageAdapter => {
     },
   };
 };
-
-export default Storage;
