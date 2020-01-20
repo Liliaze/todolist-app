@@ -1,5 +1,5 @@
 import Config from '../config.js';
-import LocalStorage from '../repository/local_storage.js';
+import LocalStorageAdapter from '../repository/local_storage.js';
 import { storage } from '../repository/storage.js';
 import { fetcher } from '../repository/fetcher.js';
 import { AccountQueries, TaskListQueries, TaskQueries } from '../repository/api_client.js';
@@ -7,8 +7,8 @@ import { createLoginScreen, createTodoScreen, refreshTodoScreen } from '../view/
 import { refreshTaskListElement, refreshTasksElement } from '../view/todo_screen.js';
 
 const { fetchJson } = fetcher(Config.ApiBaseUrl);
-const Storage = storage(LocalStorage);
-console.log(Storage)
+const store = storage(LocalStorageAdapter);
+console.log('storage', { store })
 
 const memory = {
   rootHtmlElement: document.getElementById(Config.rootHtmlElementId),
@@ -17,6 +17,7 @@ const memory = {
 };
 
 function navigateToScreen(screen) {
+  console.log("###", { memory })
   while (memory.rootHtmlElement.firstChild) {
     memory.rootHtmlElement.removeChild(memory.rootHtmlElement.firstChild);
   }
@@ -24,7 +25,6 @@ function navigateToScreen(screen) {
 }
 
 export function navigateToLoginScreen() {
-  memory.loginScreen;
   navigateToScreen(memory.loginScreen);
 }
 
@@ -35,19 +35,19 @@ export async function navigateToTodoScreen() {
 }
 
 export function logout() {
-  Storage.clear();
+  store.clear();
   navigateToLoginScreen();
 }
 
 export function getLocalAuthToken() {
-  return Storage.get('auth_token');
+  return store.get('auth_token');
 }
 
 export async function login(username, password) {
   const jsonResult = await fetchJson(AccountQueries.getAuthToken(username, password));
   const authToken = jsonResult.auth_token;
 
-  Storage.set('auth_token', authToken);
+  store.set('auth_token', authToken);
   navigateToTodoScreen();
 }
 
@@ -55,7 +55,7 @@ export async function signup(username, password) {
   const jsonResult = await fetchJson(AccountQueries.create(username, password));
   const authToken = jsonResult.auth_token;
 
-  Storage.set('auth_token', authToken);
+  store.set('auth_token', authToken);
   navigateToTodoScreen();
 }
 
@@ -65,7 +65,7 @@ export async function addTaskList(title) {
   const jsonResult = await fetchJson(TaskListQueries.create(authToken, title));
 
   const { value: allTaskLists } = await fetchJson(TaskListQueries.getAll(authToken));
-  Storage.set('taskListCollection', allTaskLists);
+  store.set('taskListCollection', allTaskLists);
   refreshTaskListElement();
 }
 
@@ -75,7 +75,7 @@ export async function deleteTaskList(taskListId) {
   const jsonResult = await fetchJson(TaskListQueries.delete(authToken, taskListId));
 
   const { value: allTaskLists } = await fetchJson(TaskListQueries.getAll(authToken));
-  Storage.set('taskListCollection', allTaskLists);
+  store.set('taskListCollection', allTaskLists);
   refreshTaskListElement();
 }
 
@@ -137,34 +137,38 @@ export async function loadAllRemoteTasks() {
 
 export async function loadTaskListCollection(authToken) {
   const { value: allTaskLists } = await fetchJson(TaskListQueries.getAll(authToken));
-  Storage.set('taskListCollection', allTaskLists);
+  store.set('taskListCollection', allTaskLists);
 }
 
 export async function loadTasksCollection(authToken) {
   const allTaskLists = getLocalTaskLists();
 
   const allTasksResults = await Promise.all(allTaskLists.map(taskList => getAllTasksFetch(authToken, taskList)));
-  Storage.set('taskCollection', allTasksResults);
+  store.set('taskCollection', allTasksResults);
 }
 
 
 async function getAllTasksFetch(authToken, taskList) {
   const { value: tasksResults } = await fetchJson(TaskQueries.getAll(authToken, taskList["tasklist_id"]));
-  Storage.set('taskCollection_' + taskList["tasklist_id"], tasksResults);
+  store.set('taskCollection_' + taskList["tasklist_id"], tasksResults);
   return tasksResults;
 }
 
 export function getLocalTaskLists() {
-  const taskListsCollection = Storage.get('taskListCollection');
+  console.log('>>>', { storage, LocalStorage: LocalStorageAdapter })
+
+  console.log('>>>', { memory })
+  console.log('>>>', { store })
+  const taskListsCollection = store.get('taskListCollection');
   return taskListsCollection || [];
 }
 
 export function getLocalTasks() {
-  const taskCollection = Storage.get('taskCollection');
+  const taskCollection = store.get('taskCollection');
   return taskCollection || [];
 }
 
 export function getLocalTasksById(task_id) {
-  const taskCollectionById = Storage.get('taskCollection_' + task_id);
+  const taskCollectionById = store.get('taskCollection_' + task_id);
   return taskCollectionById || [];
 }

@@ -1,5 +1,5 @@
 import { createElement } from '../model/element.js';
-import { getLocalTaskLists, getLocalTasksById, logout, addTaskList, deleteTaskList, updateTaskList, addTask, deleteTask, doneTask, updateTask } from '../controller/action.js';
+import * as Action from '../controller/action.js';
 import { isAlphaNumeric } from './utils.js';
 
 var taskListSelectedId = 0;
@@ -28,7 +28,6 @@ export function refreshTasksElement() {
 }
 
 export function createTodoScreen() {
-
   const screen = createElement('div',
     { id: 'todo_screen' },
     [
@@ -48,7 +47,7 @@ function createLogoutButton() {
     createElement('button', {
       id: "logoutButton",
       onclick: () => {
-        logout();
+        Action.logout();
       }
     }, 'LOGOUT'),
   ])
@@ -56,7 +55,7 @@ function createLogoutButton() {
 }
 
 function createTaskLists() {
-  const taskLists = getLocalTaskLists();
+  const taskLists = Action.getLocalTaskLists();
   if (!taskLists.length) {
     return createNewTaskListForm();
   }
@@ -77,7 +76,7 @@ function createTaskLists() {
     select,
     createElement('button', {
       onclick: () => {
-        deleteTaskList(select.value);
+        Action.deleteTaskList(select.value);
       }
     }, createElement('i', { className: "fas fa-trash" })),
     createElement('button', {
@@ -85,7 +84,7 @@ function createTaskLists() {
         var newTitle = prompt("Please enter your new name for this taskList", "");
         if (newTitle !== null && newTitle !== "") {
           if (isAlphaNumeric(newTitle) && newTitle.length < 250)
-            updateTaskList(newTitle, taskListSelectedId);
+            Action.updateTaskList(newTitle, taskListSelectedId);
           else
             prompt("Please enter valid new title", "");
         }
@@ -96,7 +95,7 @@ function createTaskLists() {
         var newTitle = prompt("Please enter a name for new taskList", "Create a new taskList");
         if (newTitle !== null && newTitle !== "") {
           if (isAlphaNumeric(newTitle) && newTitle.length < 250)
-            addTaskList(newTitle);
+            Action.addTaskList(newTitle);
           else
             alert("Please enter only alphanumeric data");
         }
@@ -109,7 +108,7 @@ function createTaskLists() {
 
 
 function createTasks() {
-  const tasks = getLocalTasksById(taskListSelectedId);
+  const tasks = Action.getLocalTasksById(taskListSelectedId);
 
   if (!tasks.length) {
     return createElement('div', null, []);
@@ -120,13 +119,13 @@ function createTasks() {
         createElement('button', {
           className: 'doneTaskButton',
           onclick: () => {
-            doneTask(task['task_id'], task['content'], task['status'], task['tasklist_id']);
+            Action.doneTask(task['task_id'], task['content'], task['status'], task['tasklist_id']);
           }
         }, createElement('p', null, task["content"])),
         createElement('button', {
           className: 'deleteTaskButton',
           onclick: () => {
-            deleteTask(task['task_id']);
+            Action.deleteTask(task['task_id']);
           }
         }, createElement('i', { className: "fas fa-trash" })),
         createElement('button', {
@@ -135,7 +134,7 @@ function createTasks() {
             var newContent = prompt("Please enter your new task", task['content']);
             if (newContent !== null && newContent !== "") {
               if (isAlphaNumeric(newContent) && newContent.length < 250)
-                updateTask(task['task_id'], newContent, task['status'], task['tasklist_id']);
+                Action.updateTask(task['task_id'], newContent, task['status'], task['tasklist_id']);
               else
                 prompt("Please enter valid new task", "");
             }
@@ -156,7 +155,7 @@ function createNewTaskForm() {
       createElement('button', {
         onclick: () => {
           if (isAlphaNumeric(contentInput.value) && contentInput.value.length < 250)
-            addTask(taskListSelectedId, contentInput.value);
+            Action.addTask(taskListSelectedId, contentInput.value);
           else
             alert("Please enter only alphanumeric data");
         }
@@ -174,7 +173,7 @@ function createNewTaskListForm() {
       createElement('button', {
         onclick: () => {
           if (isAlphaNumeric(contentInput.value) && contentInput.value.length < 250)
-            addTaskList(contentInput.value);
+            Action.addTaskList(contentInput.value);
           else
             alert("Please enter only alphanumeric data");
         }
